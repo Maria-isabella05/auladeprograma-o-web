@@ -4,6 +4,231 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projetos da ONG Lar sem grades</title>
+    <style>
+        /* Variáveis do Design System do index.html (mantidas para consistência) */
+        :root {
+            --cor-primaria-base: #106f3e;
+            --cor-primaria-claro: #148f4b;
+            --cor-secundaria-base: #ffc107;
+            --cor-secundaria-escuro: #ffa000;
+            --cor-neutra-fundo: #f4f4f4;
+            --cor-neutra-texto: #333;
+            --cor-neutra-contraste: #fff;
+            --cor-alerta: #dc3545;
+            --cor-sucesso: #28a745;
+            --cor-informacao: #17a2b8; /* Novo para feedback */
+
+            --fonte-familia: 'Arial', sans-serif;
+            --fonte-tamanho-xs: 0.75rem;
+            --fonte-tamanho-sm: 1rem;
+            --fonte-tamanho-md: 1.25rem;
+            --fonte-tamanho-lg: 1.5rem;
+            --fonte-tamanho-xl: 2.5rem;
+
+            --espaco-xs: 8px;
+            --espaco-sm: 16px;
+            --espaco-md: 24px;
+            --espaco-lg: 32px;
+            --espaco-xl: 48px;
+            --espaco-xxl: 64px;
+
+            --grid-colunas: repeat(12, 1fr);
+            --grid-gutter: var(--espaco-sm);
+        }
+
+        /* Estilos Base e Grid */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--fonte-familia);
+            line-height: 1.6;
+            color: var(--cor-neutra-texto);
+            background-color: var(--cor-neutra-fundo);
+            display: grid;
+            grid-template-columns: var(--grid-colunas);
+            grid-template-rows: auto auto 1fr auto;
+            gap: var(--grid-gutter);
+            min-height: 100vh;
+        }
+        header, nav, .container, footer { grid-column: 1 / -1; }
+        
+        /* Layout */
+        header {
+            background-color: var(--cor-primaria-base);
+            color: var(--cor-neutra-contraste);
+            padding: var(--espaco-md) var(--espaco-sm);
+            text-align: center;
+        }
+        h1 { font-size: var(--fonte-tamanho-xl); }
+        .container {
+            padding: var(--espaco-md) var(--espaco-sm);
+            max-width: 1200px;
+            margin: 0 auto;
+            grid-column: 2 / 12;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: var(--espaco-md);
+            padding: var(--espaco-sm);
+            background-color: var(--cor-secundaria-base);
+        }
+        nav a {
+             color: var(--cor-neutra-texto);
+             padding: var(--espaco-xs);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--cor-neutra-texto);
+            color: var(--cor-neutra-contraste);
+            text-align: center;
+            padding: var(--espaco-sm);
+            margin-top: var(--espaco-lg);
+        }
+
+        /* =======================================
+           Componentes de Interface - Cards
+           ======================================= */
+        
+        /* Container dos Cards (CSS Grid) */
+        .cards-container {
+            display: grid;
+            /* Inicia com 1 coluna, se adapta para mais (min-width: 300px) */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: var(--espaco-lg);
+            margin-top: var(--espaco-md);
+        }
+
+        /* Card Individual (Flexbox para alinhamento interno) */
+        .card {
+            background-color: var(--cor-neutra-contraste);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: var(--espaco-md);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+        .card-header {
+             margin-bottom: var(--espaco-sm);
+             padding-bottom: var(--espaco-xs);
+             border-bottom: 2px solid var(--cor-secundaria-base);
+        }
+        .card p {
+            flex-grow: 1; /* Faz o parágrafo ocupar o espaço restante */
+        }
+        .card a {
+            margin-top: var(--espaco-sm);
+            align-self: flex-start;
+        }
+
+        /* Botão/Link para o Card */
+        .card-btn {
+            display: inline-block;
+            padding: var(--espaco-xs) var(--espaco-sm);
+            background-color: var(--cor-primaria-base);
+            color: var(--cor-neutra-contraste);
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .card-btn:hover {
+            background-color: var(--cor-primaria-claro);
+            color: var(--cor-neutra-contraste);
+        }
+
+        /* =======================================
+           Componentes de Interface - Badges/Tags
+           ======================================= */
+
+        .tag-container {
+            margin-top: var(--espaco-sm);
+        }
+        .tag {
+            display: inline-block;
+            padding: var(--espaco-xs) var(--espaco-sm);
+            margin-right: var(--espaco-xs);
+            margin-bottom: var(--espaco-xs);
+            border-radius: 4px;
+            font-size: var(--fonte-tamanho-xs);
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        /* Variações de Tags */
+        .tag-adocao { background-color: var(--cor-secundaria-base); color: var(--cor-neutra-texto); }
+        .tag-resgate { background-color: var(--cor-alerta); color: var(--cor-neutra-contraste); }
+        .tag-conscientizacao { background-color: var(--cor-primaria-base); color: var(--cor-neutra-contraste); }
+
+        /* =======================================
+           Componentes de Feedback (Alerts e Toasts)
+           ======================================= */
+
+        /* Alert (Feedback na página) */
+        .alert {
+            padding: var(--espaco-sm);
+            margin-bottom: var(--espaco-md);
+            border: 1px solid transparent;
+            border-radius: 4px;
+            font-size: var(--fonte-tamanho-sm);
+        }
+        .alert-info {
+            color: #0c5460;
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+        }
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        /* Toast (Notificação flutuante) */
+        .toast-container {
+            position: fixed;
+            top: var(--espaco-md);
+            right: var(--espaco-md);
+            z-index: 1050;
+        }
+        .toast {
+            background-color: var(--cor-neutra-texto);
+            color: var(--cor-neutra-contraste);
+            padding: var(--espaco-sm) var(--espaco-md);
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            margin-bottom: var(--espaco-sm);
+            opacity: 0; /* Inicia escondido */
+            transition: opacity 0.3s, transform 0.3s;
+            transform: translateX(100%);
+        }
+        /* Classe para exibir o toast (seria ativada via JS) */
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        /* =======================================
+           Breakpoints Responsivos (Ajuste do Grid)
+           ======================================= */
+        
+        /* 3. Medium devices (Tablet Landscape >= 768px) */
+        @media (min-width: 768px) {
+            .container {
+                grid-column: 2 / 12;
+            }
+        }
+        
+        /* 4. Large devices (Desktop >= 992px) */
+        @media (min-width: 992px) {
+             .container {
+                grid-column: 1 / -1; /* Ocupa a largura total para o max-width do container */
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -17,10 +242,58 @@
         <a href="projetos.html">Projetos Sociais</a>
         <a href="cadastro.html">Cadastro</a>
     </nav>
+     <div class="toast-container">
+        <div class="toast show" id="toast-novidades">
+            <span>Novidades! Novo Projeto de Resgate de Felinos Lançado!</span>
+        </div>
+    </div>
     <div class="container">
+           <div class="alert alert-info">
+            <p><strong>Atenção:</strong> Sua ajuda como voluntário é essencial! Doe seu tempo ou recursos. <a href="cadastro.html" style="color: #0c5460; text-decoration: underline;">Cadastre-se!</a></p>
+        </div>
         <h2>Junte-se à Causa!</h2>
         <p>A paixão pelos animais é o que nos move. Se você compartilha desse sentimento, há várias maneiras de fazer a diferença em suas vidas.</p>
+<div class="cards-container">
+            
+            <div class="card" id="adocao">
+                <div class="card-header">
+                    <h3>Projetos de Adoção</h3>
+                </div>
+                <div class="tag-container">
+                    <span class="tag tag-adocao">Adoção</span>
+                    <span class="tag tag-adocao">Lar Permanente</span>
+                </div>
+                <p>Nosso projeto de adoção visa encontrar lares permanentes para animais abandonados, promovendo a responsabilidade na adoção e o bem-estar do pet.</p>
+                <a href="#" class="card-btn">Ver Pets Disponíveis</a>
+            </div>
 
+            <div class="card" id="resgate">
+                <div class="card-header">
+                    <h3>Projetos de Resgate</h3>
+                </div>
+                 <div class="tag-container">
+                    <span class="tag tag-resgate">Resgate</span>
+                    <span class="tag tag-resgate">Abrigo Temporário</span>
+                </div>
+                <p>O projeto de resgate tem como objetivo resgatar animais em situação de risco, proporcionando cuidados médicos e abrigo temporário até que possam ser adotados.</p>
+                <a href="#" class="card-btn">Como Notificar um Resgate</a>
+            </div>
+
+            <div class="card" id="cosmeticos">
+                <div class="card-header">
+                    <h3>Conscientização e Resgate de Vítimas de Testes</h3>
+                </div>
+                 <div class="tag-container">
+                    <span class="tag tag-resgate">Resgate</span>
+                    <span class="tag tag-conscientizacao">Conscientização</span>
+                </div>
+                <p>Estamos comprometidos em resgatar e reabilitar animais que foram vítimas de testes em indústrias de cosméticos, sendo nossa missão oferecer a esses animais um lar seguro e amoroso. Além de promover a conscientização sobre as alternativas.</p>
+                <a href="#" class="card-btn">Saiba Mais</a>
+            </div>
+
+        </div>
+
+        <section class="secao voluntariado">
         <div class="secao voluntariado">
             <h3>Seja um Voluntário</h3>
             <p>O voluntariado é o coração do LAR SEM GRADES. Sua ajuda é fundamental nas seguintes áreas:</p>
