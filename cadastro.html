@@ -4,6 +4,254 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seja um voluntário</title>
+        <style>
+        /* Variáveis do Design System do index.html (mantidas para consistência) */
+        :root {
+            --cor-primaria-base: #106f3e;
+            --cor-primaria-claro: #148f4b;
+            --cor-secundaria-base: #ffc107;
+            --cor-secundaria-escuro: #ffa000;
+            --cor-neutra-fundo: #f4f4f4;
+            --cor-neutra-texto: #333;
+            --cor-neutra-contraste: #fff;
+            --cor-alerta: #dc3545;
+            --cor-sucesso: #28a745; /* Novo para validação/feedback */
+
+            --fonte-familia: 'Arial', sans-serif;
+            --fonte-tamanho-xs: 0.75rem;
+            --fonte-tamanho-sm: 1rem;
+            --fonte-tamanho-md: 1.25rem;
+            --fonte-tamanho-lg: 1.5rem;
+            --fonte-tamanho-xl: 2.5rem;
+
+            --espaco-xs: 8px;
+            --espaco-sm: 16px;
+            --espaco-md: 24px;
+            --espaco-lg: 32px;
+            --espaco-xl: 48px;
+            --espaco-xxl: 64px;
+
+            --grid-colunas: repeat(12, 1fr);
+            --grid-gutter: var(--espaco-sm);
+        }
+
+        /* Estilos Base e Grid */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--fonte-familia);
+            line-height: 1.6;
+            color: var(--cor-neutra-texto);
+            background-color: var(--cor-neutra-fundo);
+            display: grid;
+            grid-template-columns: var(--grid-colunas);
+            grid-template-rows: auto 1fr auto;
+            gap: var(--grid-gutter);
+            min-height: 100vh;
+        }
+        header, main, footer, nav { grid-column: 1 / -1; }
+        
+        /* Layout */
+        header {
+            background-color: var(--cor-primaria-base);
+            color: var(--cor-neutra-contraste);
+            padding: var(--espaco-md) var(--espaco-sm);
+            text-align: center;
+        }
+        h1 { font-size: var(--fonte-tamanho-xl); }
+        main {
+            padding: var(--espaco-md) var(--espaco-sm);
+            max-width: 800px;
+            margin: 0 auto;
+            grid-column: 2 / 12; /* Centraliza em desktops */
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: var(--espaco-md);
+            padding: var(--espaco-sm);
+            background-color: var(--cor-secundaria-base);
+        }
+        nav a {
+             color: var(--cor-neutra-texto);
+             padding: var(--espaco-xs);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--cor-neutra-texto);
+            color: var(--cor-neutra-contraste);
+            text-align: center;
+            padding: var(--espaco-sm);
+            margin-top: var(--espaco-lg);
+        }
+
+        /* =======================================
+           Componentes de Interface - Formulários
+           ======================================= */
+
+        form {
+            background-color: var(--cor-neutra-contraste);
+            padding: var(--espaco-lg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        fieldset {
+            border: 1px solid #ccc;
+            padding: var(--espaco-md);
+            margin-bottom: var(--espaco-md);
+            border-radius: 4px;
+        }
+        legend {
+            font-weight: bold;
+            font-size: var(--fonte-tamanho-md);
+            padding: 0 var(--espaco-xs);
+            color: var(--cor-primaria-base);
+        }
+
+        /* Layout de Formulário (Flexbox para alinhamento e Grid para campos) */
+        form h2 {
+            font-size: var(--fonte-tamanho-lg);
+            margin-bottom: var(--espaco-md);
+            text-align: center;
+        }
+        form > fieldset {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--espaco-sm) var(--espaco-md);
+        }
+
+        /* Estilização de Campos e Labels */
+        label {
+            display: block;
+            margin-bottom: var(--espaco-xs);
+            font-weight: bold;
+            font-size: var(--fonte-tamanho-sm);
+        }
+        input, select {
+            width: 100%;
+            padding: var(--espaco-xs);
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: var(--fonte-tamanho-sm);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        /* Estados Visuais (Focus e Validação) */
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--cor-primaria-base);
+            box-shadow: 0 0 0 3px rgba(16, 111, 62, 0.2);
+        }
+
+        /* Validação Visual (Feedback) */
+        input:invalid:not(:focus):not(:placeholder-shown) {
+            border-color: var(--cor-alerta);
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2);
+        }
+        input:valid:not(:focus):not(:placeholder-shown) {
+            border-color: var(--cor-sucesso);
+        }
+
+        /* Componentes - Botões */
+        button {
+            display: block;
+            width: 100%;
+            padding: var(--espaco-sm);
+            margin-top: var(--espaco-md);
+            border: none;
+            border-radius: 4px;
+            font-size: var(--fonte-tamanho-md);
+            cursor: pointer;
+            background-color: var(--cor-primaria-base);
+            color: var(--cor-neutra-contraste);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        /* Estados Visuais do Botão */
+        button:hover {
+            background-color: var(--cor-primaria-claro);
+        }
+        button:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px var(--cor-secundaria-base);
+        }
+        button:active {
+            background-color: #0d552e; /* Cor um pouco mais escura */
+        }
+        button[disabled] {
+            background-color: #aaa;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        /* =======================================
+           Componentes de Feedback (Modal)
+           ======================================= */
+        
+        /* Estrutura do Modal (Padrão escondido) */
+        .modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none; /* Inicia escondido */
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: var(--cor-neutra-contraste);
+            padding: var(--espaco-lg);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            border-left: 5px solid var(--cor-sucesso);
+        }
+        .modal-content h3 {
+            color: var(--cor-sucesso);
+            margin-bottom: var(--espaco-sm);
+        }
+
+        /* Classe para exibir o modal (seria ativada via JS após o envio) */
+        .modal.show {
+            display: flex;
+        }
+
+        /* =======================================
+           Breakpoints Responsivos (Ajuste do Grid)
+           ======================================= */
+
+        /* 2. Small devices (Mobile Landscape e Tablet Portrait >= 576px) */
+        @media (min-width: 576px) {
+             main {
+                grid-column: 2 / 12;
+             }
+        }
+
+        /* 3. Medium devices (Tablet Landscape >= 768px) */
+        @media (min-width: 768px) {
+            main {
+                grid-column: 3 / 11;
+            }
+            /* Em tablets, campo de endereço em 2 colunas */
+            #endereco {
+                grid-column: span 2;
+            }
+        }
+
+        /* 4. Large devices (Desktop >= 992px) */
+        @media (min-width: 992px) {
+             main {
+                grid-column: 4 / 10;
+            }
+        }
+
+    </style>
 </head>
 <body>
     <header>
@@ -18,10 +266,8 @@
     <main>
         <section>
             <h2>Formulário de Cadastro</h2>
-            <form action="processar_cadastro.html" method="POST">
+            <form action="#" method="POST"> 
              <h2>Preencha seus Dados</h2>
-        <form action="/enviar-cadastro" method="post">
-            
             <fieldset>
                 <legend>Dados Pessoais</legend>
                 
@@ -100,7 +346,16 @@
             <p style="text-align: center; font-size: 0.9em; margin-top: 10px;">* Campos obrigatórios</p>
         </form>
     </div>
+        <div id="modal-sucesso" class="modal">
+        <div class="modal-content">
+            <h3>Cadastro Enviado com Sucesso!</h3>
+            <p>Agradecemos o seu interesse! Em breve entraremos em contato para formalizar sua colaboração.</p>
+        </div>
+    </div>
+    </main>
 
     <footer>
         &copy; 2025 LAR SEM GRADES. Venha ser um herói!
     </footer>
+</body>
+</html>
