@@ -4,21 +4,271 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ONG Lar sem grades</title>
+     <style>
+        /* =======================================
+           1. Sistema de Design - Variáveis CSS
+           ======================================= */
+        :root {
+            /* Cores (mínimo 8) */
+            --cor-primaria-base: #106f3e; /* Verde Escuro */
+            --cor-primaria-claro: #148f4b;
+            --cor-secundaria-base: #ffc107; /* Amarelo/Dourado */
+            --cor-secundaria-escuro: #ffa000;
+            --cor-neutra-fundo: #f4f4f4; /* Cinza Claro */
+            --cor-neutra-texto: #333;
+            --cor-neutra-contraste: #fff;
+            --cor-alerta: #dc3545; /* Vermelho */
+
+            /* Tipografia (mínimo 5 tamanhos) */
+            --fonte-familia: 'Arial', sans-serif;
+            --fonte-tamanho-xs: 0.75rem; /* 12px */
+            --fonte-tamanho-sm: 1rem;    /* 16px (Base) */
+            --fonte-tamanho-md: 1.25rem; /* 20px */
+            --fonte-tamanho-lg: 1.5rem;  /* 24px */
+            --fonte-tamanho-xl: 2.5rem;  /* 40px */
+
+            /* Espaçamento Modular (8px, 16px, 24px, 32px, 48px, 64px) */
+            --espaco-xs: 8px;
+            --espaco-sm: 16px;
+            --espaco-md: 24px;
+            --espaco-lg: 32px;
+            --espaco-xl: 48px;
+            --espaco-xxl: 64px;
+
+            /* Grid Customizado (12 colunas - usado na estrutura principal) */
+            --grid-colunas: repeat(12, 1fr);
+            --grid-gutter: var(--espaco-sm);
+        }
+
+        /* Reset e Estilos Base */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--fonte-familia);
+            line-height: 1.6;
+            color: var(--cor-neutra-texto);
+            background-color: var(--cor-neutra-fundo);
+        }
+        img { max-width: 100%; height: auto; display: block; }
+        a { color: var(--cor-primaria-base); text-decoration: none; }
+        a:hover { color: var(--cor-primaria-claro); }
+
+        /* Tipografia Hierárquica */
+        h1 { font-size: var(--fonte-tamanho-xl); margin-bottom: var(--espaco-sm); }
+        h2 { font-size: var(--fonte-tamanho-lg); margin-top: var(--espaco-lg); margin-bottom: var(--espaco-sm); }
+        h3 { font-size: var(--fonte-tamanho-md); margin-top: var(--espaco-sm); margin-bottom: var(--espaco-xs); }
+        p { margin-bottom: var(--espaco-sm); font-size: var(--fonte-tamanho-sm); }
+
+        /* =======================================
+           2. Leiautes Responsivos com Flexbox e Grid
+           ======================================= */
+
+        /* Estrutura Geral (CSS Grid) */
+        body {
+            display: grid;
+            grid-template-columns: var(--grid-colunas);
+            grid-template-rows: auto 1fr auto; /* header, main, footer */
+            gap: var(--grid-gutter);
+            min-height: 100vh;
+        }
+        header, main, footer { grid-column: 1 / -1; }
+
+        /* Alinhamento de Conteúdo - Flexbox */
+        header {
+            background-color: var(--cor-primaria-base);
+            color: var(--cor-neutra-contraste);
+            padding: var(--espaco-md) var(--espaco-sm);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Layout específico para Section (Grid para dividir conteúdo, imagem e texto) */
+        section {
+            padding: var(--espaco-lg) var(--espaco-sm);
+            margin: var(--espaco-xs) auto;
+            max-width: 1200px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr; /* Padrão mobile: 1 coluna */
+            gap: var(--espaco-md);
+        }
+        section:nth-child(even) { background-color: var(--cor-neutra-contraste); } /* Zebra striping */
+        section img { border-radius: 8px; }
+
+        /* =======================================
+           3. Navegação Sofisticada e Interativa
+           ======================================= */
+        
+        /* Menu Principal (Flexbox) */
+        nav { width: 100%; }
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            padding: var(--espaco-sm) 0;
+            gap: var(--espaco-md);
+        }
+        nav a {
+            color: var(--cor-neutra-contraste);
+            padding: var(--espaco-xs) var(--espaco-sm);
+            display: block;
+            border-radius: 4px;
+        }
+        nav a:hover {
+            background-color: var(--cor-primaria-claro);
+            color: var(--cor-neutra-contraste);
+        }
+
+        /* Menu Dropdown (Apenas estrutura HTML/CSS simples, JS seria necessário para funcionalidade completa) */
+        .dropdown { position: relative; }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: var(--cor-primaria-base);
+            min-width: 160px;
+            z-index: 10;
+            top: 100%;
+            left: 0;
+            border-radius: 0 0 4px 4px;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .dropdown-content li {
+             width: 100%;
+             text-align: left;
+        }
+        .dropdown-content a {
+            padding: var(--espaco-xs) var(--espaco-sm);
+        }
+
+        /* Menu Hambúrguer (Escondido em desktop, estrutura básica) */
+        .menu-toggle { display: none; }
+        .hamburger {
+             display: none; /* Esconder em desktop */
+             cursor: pointer;
+             padding: var(--espaco-xs);
+        }
+        .bar {
+             display: block;
+             width: 25px;
+             height: 3px;
+             margin: 5px auto;
+             background-color: var(--cor-neutra-contraste);
+             transition: all 0.3s ease-in-out;
+        }
+
+        /* =======================================
+           4. Componentes de Interface
+           ======================================= */
+
+        /* Exemplo de Badge/Tag */
+        .badge {
+            display: inline-block;
+            padding: var(--espaco-xs) var(--espaco-sm);
+            margin-top: var(--espaco-xs);
+            background-color: var(--cor-secundaria-base);
+            color: var(--cor-neutra-texto);
+            border-radius: 20px;
+            font-size: var(--fonte-tamanho-xs);
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        /* =======================================
+           5. Breakpoints Responsivos (Mínimo 5)
+           ======================================= */
+
+        /* 1. Extra Small devices (Mobile Portrait < 576px) - Padrão */
+
+        /* 2. Small devices (Mobile Landscape e Tablet Portrait >= 576px) */
+        @media (min-width: 576px) {
+             header { padding: var(--espaco-lg) var(--espaco-md); }
+             section { padding: var(--espaco-lg) var(--espaco-md); }
+        }
+
+        /* 3. Medium devices (Tablet Landscape >= 768px) */
+        @media (min-width: 768px) {
+            h1 { font-size: 3rem; }
+            /* Mobile Navigation - Mostra Hambúrguer e Esconde menu desktop */
+            nav ul { display: none; }
+            .hamburger { display: block; }
+            
+            /* Layout Principal da Section (2 colunas) */
+            .section-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* 4. Large devices (Desktop >= 992px) */
+        @media (min-width: 992px) {
+             /* Desktop Navigation - Esconde Hambúrguer e Mostra menu desktop */
+             .hamburger { display: none; }
+             nav ul { display: flex; }
+             
+             /* Layout Principal da Section (3 colunas, mais espaço) */
+             section {
+                padding: var(--espaco-xl) var(--espaco-lg);
+                grid-template-columns: 1fr 2fr; /* Layout específico */
+             }
+             .section-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+
+        /* 5. Extra Large devices (Large Desktop >= 1200px) */
+        @media (min-width: 1200px) {
+            header { padding: var(--espaco-xxl) var(--espaco-lg); }
+            section {
+                max-width: 1400px;
+            }
+        }
+
+        /* Estado ativo do menu (simulação com checkbox + CSS) */
+        #menu-toggle:checked ~ nav ul {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            text-align: center;
+        }
+        #menu-toggle:checked ~ .hamburger .bar:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
+        #menu-toggle:checked ~ .hamburger .bar:nth-child(2) { opacity: 0; }
+        #menu-toggle:checked ~ .hamburger .bar:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
+
+    </style>
 </head>
 <body>
     <header>
+        <div class="header-content">
         <h1>ONG Lar sem grades</h1>
         <p>Um novo lar para quem só conhece as grades</p>
+        <span class="badge">Apoiamos a Adoção Responsável</span>
+        </div>
+        <input type="checkbox" id="menu-toggle" class="menu-toggle" aria-controls="main-nav" hidden>
+        <label for="menu-toggle" class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </label>
+        <nav id="main-nav">   
         <nav>   
             <ul>
                <li><a href="index.html">Inicio</a></li> 
-               <li><a href="projetos.html">Projetos Sociais</a></li>
-               <li><a href="cadastro.html">cadastro</a></li>
+               <li class="dropdown">
+                   <a href="projetos.html">Projetos Sociais</a>
+                   <ul class="dropdown-content">
+                        <li><a href="projetos.html#adocao">Adoção</a></li>
+                        <li><a href="projetos.html#resgate">Resgate</a></li>
+                        <li><a href="projetos.html#cosmeticos">Conscientização</a></li>
+                    </ul>
+               </li>
+               <li><a href="cadastro.html">Cadastro</a></li>
             </ul>
         </nav>
     </header>
     <main>
-        <section>
+        <section> class="section-grid"> 
             <h2>Quem somos</h2>
             <p>Somos uma organização sem fins lucrativos que atua com a missão de reabilitar animais abandonados </p>
             <img src="imagem1logo.jpg" alt="imagem-logo-lar-sem-grades">
